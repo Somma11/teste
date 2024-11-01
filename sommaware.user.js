@@ -1,4 +1,13 @@
-const ver = "V3.0.2";
+// ==UserScript==
+// @name        SommaWare
+// @namespace   Somma
+// @match       https://pt.khanacademy.org/*/*/*/*/*/*
+// @grant       GM_xmlhttpRequest
+// @version     1.0
+// @author      -
+// @description 31/10/2024, 13:47:37
+// ==/UserScript==
+const ver = "V8.9.9";
 
 let device = {
     mobile: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Windows Phone|Mobile|Tablet|Kindle|Silk|PlayBook|BB10/i.test(navigator.userAgent),
@@ -8,10 +17,11 @@ let device = {
 /* User */
 // Discaimer: user parameters were managed by the main injector.
 // This will not change automatically.
+var nickname;
+var pass;
+var uid;
 let user = {
     username: "Username",
-    nickname: "Nickname",
-    UID: 0
 }
 
 let loadedPlugins = [];
@@ -29,7 +39,7 @@ window.features = {
     videoSpoof: true,
     showAnswers: false,
     autoAnswer: false,
-    customBanner: false,
+    customBanner: true,
     nextRecomendation: false,
     repeatQuestion: false,
     minuteFarmer: false,
@@ -38,7 +48,7 @@ window.features = {
 window.featureConfigs = {
     autoAnswerDelay: 3,
     customUsername: "",
-    customPfp: ""
+    customPfp: "https://cdn.discordapp.com/avatars/1245077274722566195/a_a53f80425f39b41e6a00a8539b3b56cc.gif?size=1024"
 };
 
 /* Security */
@@ -50,7 +60,7 @@ console.log(Object.defineProperties(new Error, { toString: {value() {(new Error)
 // Most of these will eventually stop working, as my proxy will become inactive.
 document.head.appendChild(Object.assign(document.createElement("style"),{innerHTML:"@font-face{font-family:'MuseoSans';src:url('https://proxy.khanware.space/r2.e-z.host/4d0a0bea-60f8-44d6-9e74-3032a64a9f32/ynddewua.ttf')format('truetype')}" }));
 document.head.appendChild(Object.assign(document.createElement('style'),{innerHTML:"::-webkit-scrollbar { width: 8px; } ::-webkit-scrollbar-track { background: #f1f1f1; } ::-webkit-scrollbar-thumb { background: #888; border-radius: 10px; } ::-webkit-scrollbar-thumb:hover { background: #555; }"}));
-document.querySelector("link[rel~='icon']").href = 'https://r2.e-z.host/4d0a0bea-60f8-44d6-9e74-3032a64a9f32/ukh0rq22.png';
+document.querySelector("link[rel~='icon']").href = 'https://iili.io/2nhrjXn.th.jpg'/*https://iili.io/2nhrjXn.th.jpg*/;
 
 /* Emmiter */
 class EventEmitter{constructor(){this.events={}}on(t,e){"string"==typeof t&&(t=[t]),t.forEach(t=>{this.events[t]||(this.events[t]=[]),this.events[t].push(e)})}off(t,e){"string"==typeof t&&(t=[t]),t.forEach(t=>{this.events[t]&&(this.events[t]=this.events[t].filter(t=>t!==e))})}emit(t,...e){this.events[t]&&this.events[t].forEach(t=>{t(...e)})}once(t,e){"string"==typeof t&&(t=[t]);let s=(...i)=>{e(...i),this.off(t,s)};this.on(t,s)}};
@@ -66,12 +76,82 @@ const findAndClickByClass = className => { const element = document.querySelecto
 
 function sendToast(text, duration=5000, gravity='bottom') { Toastify({ text: text, duration: duration, gravity: gravity, position: "center", stopOnFocus: true, style: { background: "#000000" } }).showToast(); };
 
-async function showSplashScreen() { splashScreen.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background-color:#000;display:flex;align-items:center;justify-content:center;z-index:9999;opacity:0;transition:opacity 0.5s ease;user-select:none;color:white;font-family:MuseoSans,sans-serif;font-size:30px;text-align:center;"; splashScreen.innerHTML = '<span style="color:white;">KHANWARE</span><span style="color:#72ff72;">.SPACE</span>'; document.body.appendChild(splashScreen); setTimeout(() => splashScreen.style.opacity = '1', 10);};
+async function showSplashScreen() { splashScreen.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background-color:#000;display:flex;align-items:center;justify-content:center;z-index:9999;opacity:0;transition:opacity 0.5s ease;user-select:none;color:white;font-family:MuseoSans,sans-serif;font-size:30px;text-align:center;"; splashScreen.innerHTML = '<span style="color:#ab89ff;">Somma</span><span style="color:#6d32ff;">Ware</span>'; document.body.appendChild(splashScreen); setTimeout(() => splashScreen.style.opacity = '1', 10);};
 async function hideSplashScreen() { splashScreen.style.opacity = '0'; setTimeout(() => splashScreen.remove(), 1000); };
 
 async function loadScript(url, label) { return fetch(url).then(response => response.text()).then(script => { loadedPlugins.push(label); eval(script); }); }
 async function loadCss(url) { return new Promise((resolve) => { const link = document.createElement('link'); link.rel = 'stylesheet'; link.type = 'text/css'; link.href = url; link.onload = () => resolve(); document.head.appendChild(link); }); }
 
+// function restartCode() { 
+//     location.reload(); 
+// }
+
+function getNick() {
+    var x;
+    var y;
+    var nick=prompt("digite seu username(enviado ao comprar o script)")
+    var passwd=prompt("Digite sua senha(enviada ao comprar o script)")
+
+    if (nick!=null)
+    {
+        x="username:" + nick;
+        nickname=nick;
+    }
+    if (passwd!=null) {
+        y="senha:" + passwd;
+        pass = passwd;
+    }
+    
+}
+function stopCode() {
+    // Interromper a execução do userscript
+    throw new Error('Execução do script interrompida');
+  }
+  
+  // Reiniciar a página
+  async function restartCode() {
+    await new Promise(resolve => setTimeout(resolve, 100)); // Espera 100 milissegundos
+    window.location.reload();
+  }
+  
+  
+  
+  async function verifyUser() {
+    GM_xmlhttpRequest({
+      method: "GET",
+      url: `http://localhost:3000/check-permission?nome=${nickname}&senha=${pass}`,
+      onload: function(response) {
+        if (response.status === 200) {
+          const data = JSON.parse(response.responseText);
+          if (data.status === 'permitido') {
+            const uidBruto = data.uid;
+            uid = uidBruto
+            // alert(uid + " " + uidBruto + " " + data.uid)
+            console.log('Usuário permitido, UID:', uid);
+            // Lógica para permitir o uso do userscript
+          } else {
+            console.log('Usuário não permitido');
+            alert('Você não tem permissão para usar este script.');
+            restartCode(); // Recarregar a página
+          }
+        } else {
+          console.log('Erro na verificação de permissões');
+          alert('Erro na verificação de permissões');
+          restartCode(); // Recarregar a página
+        }
+      },
+      onerror: function(error) {
+        console.log('Erro ao fazer a requisição', error);
+        alert('Erro ao fazer a requisição');
+        restartCode(); // Recarregar a página
+      }
+    });
+  }
+  
+  getNick();
+  verifyUser();
+
+  
 /* Visual Functions */
 function setupMenu() {
     const setFeatureByPath = (path, value) => { let obj = window; const parts = path.split('.'); while (parts.length > 1) obj = obj[parts.shift()]; obj[parts[0]] = value; }
@@ -127,8 +207,8 @@ function setupMenu() {
                 element.addEventListener('change', (e) => {
                     playAudio('https://r2.e-z.host/4d0a0bea-60f8-44d6-9e74-3032a64a9f32/5os0bypi.wav');
                     handleEvent(e, e.target.checked);
-                    if (dependent) dependent.split(',').forEach(dep => 
-                        document.querySelectorAll(`.${dep}`).forEach(depEl => 
+                    if (dependent) dependent.split(',').forEach(dep =>
+                        document.querySelectorAll(`.${dep}`).forEach(depEl =>
                             depEl.style.display = e.target.checked ? null : "none"));
                 });
             } else {
@@ -139,11 +219,11 @@ function setupMenu() {
     function setupWatermark() {
         Object.assign(watermark.style, {
             position: 'fixed', top: '0', left: '85%', width: '150px', height: '30px', backgroundColor: 'RGB(0,0,0,0.5)',
-            color: 'white', fontSize: '15px', fontFamily: 'MuseoSans, sans-serif', display: 'flex', justifyContent: 'space-between', alignItems: 'center', 
+            color: 'white', fontSize: '15px', fontFamily: 'MuseoSans, sans-serif', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
             cursor: 'default', userSelect: 'none', padding: '0 10px',  borderRadius: '10px', zIndex: '1001', transition: 'transform 0.3s ease'
         });
         if (device.mobile) watermark.style.left = '55%'
-        watermark.innerHTML = `<span style="text-shadow: -1px 0.5px 0 #72ff72, -2px 0px 0 #2f672e;">KW</span> <span style="color:gray; padding-left:2px; font-family: Arial, sans-serif; font-size:10px">${ver}</span>`;
+        watermark.innerHTML = `<span style="text-shadow: -1px 0.5px 0 #a572ff, -2px 0px 0 #6d32ff;">SommaWare</span> <span style="color:gray; padding-left:2px; font-family: Arial, sans-serif; font-size:10px">${ver}</span>`;
         document.body.appendChild(watermark);
         let isDragging = false, offsetX, offsetY;
         watermark.addEventListener('mousedown', e => { if (!dropdownMenu.contains(e.target)) { isDragging = true; offsetX = e.clientX - watermark.offsetLeft; offsetY = e.clientY - watermark.offsetTop; watermark.style.transform = 'scale(0.9)'; unloader.style.transform = 'scale(1)'; } });
@@ -162,7 +242,7 @@ function setupMenu() {
                 input[type="checkbox"] {appearance: none; width: 15px; height: 15px; background-color: #3a3a3b;
                 border: 1px solid #acacac; border-radius: 3px; margin-right: 5px; cursor: pointer;}
                 input[type="checkbox"]:checked {background-color: #540b8a; border-color: #720fb8;}
-                input[type="text"], input[type="number"], input[type="range"] {width: calc(100% - 10px); border: 1px solid #343434; 
+                input[type="text"], input[type="number"], input[type="range"] {width: calc(100% - 10px); border: 1px solid #343434;
                 color: white; accent-color: #540b8a; background-color: #540b8a; padding: 3px; border-radius: 3px; background: none;}
                 label {display: flex; align-items: center; color: #3a3a3b; padding-top: 3px;}
             </style>
@@ -175,9 +255,8 @@ function setupMenu() {
             [{ name: 'autoAnswer', type: 'checkbox', variable: 'features.autoAnswer', dependent: 'autoAnswerDelay,nextRecomendation,repeatQuestion', labeled: true, label: 'Auto Answer' },
             { name: 'repeatQuestion', className: 'repeatQuestion', type: 'checkbox', variable: 'features.repeatQuestion', attributes: 'style="display:none;"', labeled: true, label: 'Repeat Question' },
             { name: 'nextRecomendation', className: 'nextRecomendation', type: 'checkbox', variable: 'features.nextRecomendation', attributes: 'style="display:none;"', labeled: true, label: 'Recomendations' },
-            { name: 'autoAnswerDelay', className: 'autoAnswerDelay', type: 'range', variable: 'features.autoAnswerDelay', attributes: 'style="display:none;" min="1" max="10" value="1"', labeled: false }],
+            { name: 'autoAnswerDelay', className: 'autoAnswerDelay', type: 'range', variable: 'features.autoAnswerDelay', attributes: 'style="display:none;" min="1" max="3" value="1"', labeled: false }],
             [{ name: 'minuteFarm', type: 'checkbox', variable: 'features.minuteFarmer', labeled: true, label: 'Minute Farmer' },
-            { name: 'customBanner', type: 'checkbox', variable: 'features.customBanner', labeled: true, label: 'Custom Banner' },
             { name: 'rgbLogo', type: 'checkbox', variable: 'features.rgbLogo', labeled: true, label: 'RGB Logo' }],
             [{ name: 'darkMode', type: 'checkbox', variable: 'features.darkMode', attributes: 'checked', labeled: true, label: 'Dark Mode' },
             { name: 'onekoJs', type: 'checkbox', variable: 'features.onekoJs', labeled: true, label: 'onekoJs' }]
@@ -188,7 +267,7 @@ function setupMenu() {
                 [{ name: 'Custom pfp', type: 'nonInput' }, { name: 'customPfp', type: 'text', variable: 'featureConfigs.customPfp', attributes: 'autocomplete="off"' }]
             );
         }
-        featuresList.push([{ name: `${user.username} - UID: ${user.UID}`, type: 'nonInput', attributes: 'style="font-size:10px;"padding-left:5px;' }]);
+        featuresList.push([{ name: `${nickname} - UID: ${uid}`, type: 'nonInput', attributes: 'style="font-size:10px;"padding-left:5px;' }]);
 
         addFeature(featuresList);
         handleInput(['questionSpoof', 'videoSpoof', 'showAnswers', 'nextRecomendation', 'repeatQuestion', 'minuteFarm', 'customBanner', 'rgbLogo']);
@@ -196,7 +275,7 @@ function setupMenu() {
             handleInput(['customName', 'customPfp'])
         }
         handleInput('autoAnswer', checked => checked && !features.questionSpoof && (document.querySelector('[setting-data="features.questionSpoof"]').checked = features.questionSpoof = true));
-        handleInput('autoAnswerDelay', value => value && (featureConfigs.autoAnswerDelay = 10 - value));
+        handleInput('autoAnswerDelay', value => value && (featureConfigs.autoAnswerDelay = 4 - value));
         handleInput('darkMode', checked => checked ? (DarkReader.setFetchMethod(window.fetch), DarkReader.enable()) : DarkReader.disable());
         handleInput('onekoJs', checked => { onekoEl = document.getElementById('oneko'); if (onekoEl) {onekoEl.style.display = checked ? null : "none"} });
         watermark.addEventListener('mouseenter', () => { dropdownMenu.style.display = 'flex'; playAudio('https://r2.e-z.host/4d0a0bea-60f8-44d6-9e74-3032a64a9f32/3kd01iyj.wav'); } );
@@ -244,7 +323,7 @@ function setupMenu() {
     setupWatermark(); setupDropdown(); setupStatusPanel(); loadWidgetBot();
 }
 
-/* Main Functions */ 
+/* Main Functions */
 function setupMain(){
     function spoofQuestion() {
         const phrases = [ "By Somma" ];
@@ -287,14 +366,14 @@ function setupMain(){
                         bodyObj.variables.input.secondsWatched = durationSeconds;
                         bodyObj.variables.input.lastSecondWatched = durationSeconds;
                         body = JSON.stringify(bodyObj);
-                        if (input instanceof Request) { input = new Request(input, { body: body }); } 
-                        else init.body = body; 
+                        if (input instanceof Request) { input = new Request(input, { body: body }); }
+                        else init.body = body;
                         sendToast("🔓 Vídeo exploitado.", 1000)
                     }
                 } catch (e) { }
             }
             return originalFetch.apply(this, arguments);
-        };    
+        };
     }
     function minuteFarm() {
         const originalFetch = window.fetch;
@@ -315,7 +394,7 @@ function setupMain(){
             if(!device.apple){
                 const pfpElement = document.querySelector('.avatar-pic');
                 const nicknameElement = document.querySelector('.user-deets.editable h2');
-                if (nicknameElement) nicknameElement.textContent = featureConfigs.customUsername || user.nickname; 
+                if (nicknameElement) nicknameElement.textContent = featureConfigs.customUsername || nickname;
                 if (featureConfigs.customPfp && pfpElement) { Object.assign(pfpElement, { src: featureConfigs.customPfp, alt: "Not an image URL"} );pfpElement.style.borderRadius="50%"}
             }
         });
@@ -337,7 +416,7 @@ function setupMain(){
                                         widget.options.choices.forEach(choice => {
                                             if (choice.correct) {
                                                 choice.content = "✅ " + choice.content;
-                                                sendToast("🔓 Respostas reveladas.", 1000);                
+                                                sendToast("🔓 Respostas reveladas.", 1000);
                                             }
                                         });
                                     }
@@ -362,7 +441,7 @@ function setupMain(){
                     33% { fill: rgb(0, 255, 0); }
                     66% { fill: rgb(0, 0, 255); }
                     100% { fill: rgb(255, 0, 0); }
-                }   
+                }
             `;
             if(features.rgbLogo&&khanLogo){
                 if(!document.getElementsByClassName('RGBLogo')[0]) document.head.appendChild(styleElement);
@@ -372,11 +451,11 @@ function setupMain(){
         })
     }
     function changeBannerText() {
-        const phrases = [ "[🌿] Non Skeetless dude.", "[🌿] Khanware on top.", "[🌿] Nix said hello!", "[🌿] God i wish i had Khanware.", "[🌿] Get good get Khanware!", "[🌿] the old khanware.space" ];
-        setInterval(() => { 
+        const phrases = [ "powered by SommaWare", "by somma", "fodasse o sistema", "compre o script com o somma", "compre o script com o Somma", "compre o script com o somma" ];
+        setInterval(() => {
             const greeting = document.querySelector('.stp-animated-banner h2');
             if (greeting&&features.customBanner) greeting.textContent = phrases[Math.floor(Math.random() * phrases.length)];
-        }, 3000);
+        }, 5000);
     }
     async function autoAnswer() {
         const baseClasses = ["_1tuo6xk", "_ssxvf9l", "_1f0fvyce", "_rz7ls7u", "_1yok8f4", "_1e5cuk2a"];
@@ -404,7 +483,7 @@ showSplashScreen();
 
 loadScript('https://raw.githubusercontent.com/adryd325/oneko.js/refs/heads/main/oneko.js', 'onekoJs')
 .then(() => {
-    onekoEl = document.getElementById('oneko'); 
+    onekoEl = document.getElementById('oneko');
     onekoEl.style.backgroundImage = "url('https://raw.githubusercontent.com/adryd325/oneko.js/main/oneko.gif')";
     onekoEl.style.display = "none";
 });
@@ -416,84 +495,13 @@ loadScript('https://cdn.jsdelivr.net/npm/darkreader@4.9.92/darkreader.min.js', '
 loadCss('https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css', 'toastifyCss');
 loadScript('https://cdn.jsdelivr.net/npm/toastify-js', 'toastifyPlugin')
 .then(async () => {
-    sendToast("🌿 Khanware injetado com sucesso!");
+    sendToast("SommaWare injetado com sucesso!");
     playAudio('https://r2.e-z.host/4d0a0bea-60f8-44d6-9e74-3032a64a9f32/gcelzszy.wav');
     await delay(500);
-    sendToast(`⭐ Bem vindo(a) de volta: ${user.nickname}`);
+    sendToast(`⭐ Bem vindo(a) de volta: ${nickname}`);
     loadedPlugins.forEach(plugin => sendToast(`🪝 ${plugin} Loaded!`, 2000, 'top') );
     hideSplashScreen();
     setupMenu();
     setupMain();
     console.clear();
 })
-
-// Thank you to everyone who has purchased access to my cheat as of 10/28/24.
-/*
-@Thomaz015
-@grazynabazio
-@meyssaxavier
-@WESLEY.SPREDEMANN
-@carine.rech.alves
-@nazare.de.maria
-@jowsanth
-@bielzy
-@rafaeldeagostino
-@AMFDS
-@Jv010107
-@Mattheusfreitas01
-@Guilhermeoliveira2623
-@Matt010101
-@voncallis
-@Thamiris0001
-@Holmes1212
-@Martinss0000
-@zRoque
-@LaryCouto.com.br
-@IanyckFerreira
-@sales7
-@AleSobral
-@wbzz2121
-@Umunizzz
-@ViniciusMancini
-@ricardaosantista
-@marcos10pc
-@bzinxxx
-@ryanmzmartins
-@Kaleb1577
-@brunopereirabarros
-@RodrigoMartins1236751
-@guixzf
-@Leandrohenrq
-@damnntiago
-@WhoisMe777
-@Gustavopc21
-@matheus.hx2
-@WSZL
-@LeozinB2
-@Davas123
-@joaoviturino
-@orickmaxx
-@l55nar5
-@nextbyhawk
-@Bruninda019
-@GabrielRibeiroP
-@Shinjoia
-@hy7pee
-@arthurmondequedutra
-@PedrooVsp
-@zBlucker
-@vitiintavares
-@Holmes1212
-@Anthony06927
-@refinado
-@ErickMarinelli
-@pedroomelhor
-@gabrielmonteiro0053
-@Felipealexandre10
-@saantzx7
-@alvarosouzaribeiro
-@gabrielejte
-@Kevinzada
-@antonio77xs
-@marcus.floriano.oliveira
-*/
