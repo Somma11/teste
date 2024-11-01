@@ -1,8 +1,8 @@
 const { Client, GatewayIntentBits } = require('discord.js');
-const fetch = require('node-fetch');
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages] });
-const config = './config.json'
+const fs = require('fs');
 
+const config = JSON.parse(fs.readFileSync('./config.json', 'utf8'));
 const PREFIX = '!';
 const API_BASE_URL = config.url;
 
@@ -26,7 +26,8 @@ client.on('messageCreate', async message => {
         }
 
         try {
-            const response = await fetch(`${API_BASE_URL}/register?nome=${nome}&senha=${senha}&test=${test}`);
+            const fetch = await import('node-fetch'); // Importação dinâmica
+            const response = await fetch.default(`${API_BASE_URL}/register?nome=${nome}&senha=${senha}&test=${test}`);
             const data = await response.json();
             if (response.status === 201) {
                 message.reply(`Usuário ${nome} registrado com UID: ${data.uid}`);
@@ -41,7 +42,8 @@ client.on('messageCreate', async message => {
 
     if (command === 'list') {
         try {
-            const response = await fetch(`${API_BASE_URL}/users`);
+            const fetch = await import('node-fetch'); // Importação dinâmica
+            const response = await fetch.default(`${API_BASE_URL}/users`);
             const data = await response.json();
             const userList = data.map(user => `Nome: ${user.nome}, UID: ${user.uid}, Expira: ${user.expirationTime ? new Date(user.expirationTime).toLocaleString() : 'N/A'}`).join('\n');
             message.reply(`Usuários cadastrados:\n${userList}`);
