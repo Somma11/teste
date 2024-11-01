@@ -3,7 +3,7 @@ const fs = require('fs');
 
 const config = JSON.parse(fs.readFileSync('./config.json', 'utf8'));
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
-const API_BASE_URL = config.url;
+const API_BASE_URL = 'https://teste-6omt.onrender.com';
 const ALLOWED_USER_ID = '1273818137866801277';
 
 const commands = [
