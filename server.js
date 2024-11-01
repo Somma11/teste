@@ -79,6 +79,19 @@ app.get('/register', (req, res) => {
             res.status(201).json({ status: 'usuário registrado', uid: newUser.uid });
         });
     });
+    app.get('/users', (req, res) => {
+        fs.readFile('database.json', 'utf8', (err, data) => {
+            if (err) {
+                console.error('Erro ao ler database.json:', err);
+                res.status(500).send('Erro no servidor');
+                return;
+            }
+    
+            const database = JSON.parse(data);
+            res.status(200).json(database.users);
+        });
+    });
+    
 });
 
 app.listen(3000, () => {
