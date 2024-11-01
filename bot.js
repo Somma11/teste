@@ -37,9 +37,7 @@ const commands = [
   }
 ];
 
-client.once('ready', async () => {
-  console.log(`Bot online: ${client.user.tag}`);
-
+async function registerCommands() {
   const rest = new REST({ version: '10' }).setToken(config.token);
   
   try {
@@ -52,6 +50,11 @@ client.once('ready', async () => {
   } catch (error) {
     console.error('Erro ao registrar comandos de aplicação:', error);
   }
+}
+
+client.once('ready', async () => {
+  console.log(`Bot online: ${client.user.tag}`);
+  await registerCommands(); // Registrar comandos ao iniciar
 });
 
 client.on('interactionCreate', async interaction => {
